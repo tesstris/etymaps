@@ -30,6 +30,16 @@ import csv
 # Only needed for access to command line arguments
 import sys
 
+def inParenthetical(passage, word):
+    word_index = passage.find(word)
+    trimmed = passage[0:word_index]
+
+    open_count = trimmed.count("(")
+    closed_count = trimmed.count(")")
+
+    return (open_count > closed_count)
+
+        
 
 # function getPage
 # @purpose: visits the wiktionary page and parses it for paragraphs
@@ -115,7 +125,7 @@ def parseParagraph(language, etym_para):
             open_paren = p.find("(")
             close_paren = p.find(")")
 
-            if open_paren != -1 and open_paren < i and close_paren > i:
+            if inParenthetical(p, etyl.text):
                 continue
             
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
