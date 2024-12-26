@@ -6,7 +6,11 @@
 
 ## What is it?
 
-Etymaps is a python program that scrapes English Wiktionary for etymology data and then plots the path words took to get into their modern form on a map.
+Etymaps is a python program that scrapes [Wiktionary](https://www.wiktionary.org/) for etymology data and then plots the path words took to get into their modern form on a map.
+
+![python example](example.png)
+
+It looks like this.
 
 ## Usage
 
@@ -42,13 +46,14 @@ When you return to the etymology tab, there should be an entry box for the langu
 
 You can also tell the app whether to draw the borders of countries on its maps, and what resolution to plot the coastlines and borders in. Low resolution is recommended; higher resolutions may take a while to plot and make the maps lag.
 
+## The dataset
+
 ## Disclaimer
 
 The etymologies in this program are only as accurate as the ones in Wiktionary. While Wiktionary is generally pretty good, it is a publicly editable resource, so please double-check with a trusted source (such as the Oxford English Dictionary) as necessary.
 
-Most coordinates for modern languages in the dataset are from the World Atlas of Language Structures. The coordinates for extinct and reconstructed languages were chosen by hand, according to popular hypotheses as of December 2024, and so may be subject to error.
+The coordinates for extinct and reconstructed languages were chosen by hand, according to popular hypotheses as of December 2024, and so may be subject to error.
 
-## The dataset
 
 ## Acknowledgements
 
