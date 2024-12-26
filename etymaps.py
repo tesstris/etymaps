@@ -102,6 +102,12 @@ def parseParagraph(language, etym_para):
             cognate_loc = p.find("Cognate")
             compare_loc = p.find("Compare")
             related_loc = p.find("Related to")
+            open_paren = p.find("(")
+            close_paren = p.find(")")
+
+            if open_paren != -1 and open_paren < i and close_paren > i:
+                continue
+            
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
                 break
             if p[0:i-1].find("From") != -1 or p[0:i-1].find("from") != -1 or p[0:i-1].find("of") != -1 or p[0:i-1].find("based on"):

@@ -24,7 +24,9 @@ Then:
 
 In order to create an etymology map, enter a word into the "word" tab and hit "go." Etymaps is designed for words with clear, single-path, well-attested etymologies. For compound words, please search for each part of the compound individually. Some words with unclear etymologies (or oddly-worded Wiktionary entries) may not be mappable.
 
-Words ought to be input using their original writing systems; that is, if you are searching a Korean word, it ought to be in Hangul, and if it's a Russian word, please use Cyrillic. When using Japanese, please use kanji rather than katakana or hiragana, if the kanji exists.
+The search function is case sensitive. Proper nouns ought to be capitalized. Words ought to be input using their original writing systems; that is, if you are searching a Korean word, it ought to be in Hangul, and if it's a Russian word, please use Cyrillic. When using Japanese, please use kanji rather than katakana or hiragana, if the kanji exists.
+
+You can also trace the etymology of suffixes, like the "ish" in "English," by prepending a hyphen. (In the example, search "-ish".) Prefixes, given names, surnames, and names of cities usually also work, if there is a clear enough etymology.
 
 If the program successfully parsed a mappable etymology, a "map" button will appear at the bottom of the window. Click it to create a map.
 
