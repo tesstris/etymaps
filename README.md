@@ -12,6 +12,8 @@ Etymaps is a python program that scrapes [Wiktionary](https://www.wiktionary.org
 
 It looks like this.
 
+This project is a work in progress. Please be patient as we continue to iron out bugs and add languages to the dataset.
+
 ## Usage
 
 ### Installation
@@ -48,6 +50,10 @@ You can also tell the app whether to draw the borders of countries on its maps, 
 
 ## The dataset
 
+Roughly 2,600 sets of languages and coordinates are from [the World Atlas of Language Structures dataset.](https://github.com/cldf-datasets/wals) This dataset is licensed under a Creative Commons 4.0 International license. It has been modified slightly for the purposes of this project; namely, the formatting of certain language names have been changed to bring them in line with Wiktionary's naming and formatting conventions. (For example, something like Frisian (West) in the WALS database would be listed as West Frisian in Wiktionary.)
+
+Everything else—mostly extinct and reconstructed languages—was gathered specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations. For instance, this project locates the reconstructed language Proto-Indo-European in the Pontic-Caspian steppe, as according to the steppe hypothesis.
+
 ## Disclaimer
 
 The etymologies in this program are only as accurate as the ones in Wiktionary. While Wiktionary is generally pretty good, it is a publicly editable resource, so please double-check with a trusted source (such as the Oxford English Dictionary) as necessary.
@@ -57,5 +63,14 @@ The coordinates for extinct and reconstructed languages were chosen by hand, acc
 
 ## Acknowledgements
 
+This project would not be possible without the contributions of the authors of the World Atlas of Language Structures, as well as the creators of Wiktionary and all of its many contributors. Their excellent work and admirable scholarship deserves infinite appreciation.
+
 ## To do
 
+Features to be added:
+
+* Support for words with multiple etymologies
+* Ability to map languages, potentially according to category (living/extinct/reconstructed)
+* Coordinates for language families, in case Wiktionary isn't sure precisely which language is the provenance of a word
+* More extinct and reconstructed languages
+* Accessibility features (ability to adjust font size and map colors)
