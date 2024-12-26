@@ -58,33 +58,40 @@ def getPage(language, word):
 def parseParagraph(language, etym_para):
     ety_searching = True
     lang = etym_para.findAll("div", attrs={"class":"mw-heading mw-heading2"})
+    ety_index = None
 
-    default_lang = None
+    
     lang_place = None
-    for l in lang:
-        lang_text = l.text.replace("[edit]", "")
-        if lang_text == language:
-            lang_place = l
-            lang = lang_text
-            origins = [lang_text]
-            break
 
-    if lang_place != None:
-        headers = lang_place.find_all_next("h3")
-    else:
+    if language != None:
         for l in lang:
             lang_text = l.text.replace("[edit]", "")
-            if lang_text != "Translingual":
+            if lang_text == language:
+                lang_place = l
                 lang = lang_text
                 origins = [lang_text]
                 break
+
+    if lang_place != None:
+        headers = lang_place.find_all_next("h3")
+        for h in headers:
+            if h.text.find("Etymology") != -1:
+                ety_index = h
+                if h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text.replace("[edit]", "") != lang_text:
+                    print(h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text)
+                    return None
+                else:
+                    break
+    else:
         headers = etym_para.findAll("h3")
-    ety_index = None
+        for h in headers:
+            if h.text.find("Etymology") != -1:
+                ety_index = h
+                lang = h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text.replace("[edit]", "")
+                #print(lang_text)
+                origins = [lang]
+                break
     
-    for h in headers:
-        if h.text.find("Etymology") != -1:
-            ety_index = h
-            break
 
     if ety_index == None:
         return None           
@@ -396,6 +403,7 @@ class MainWindow(QWidget):
             self.lang_input_widget.show()
             self.text3.show()
         else:
+            self.language = None
             self.lang_input_widget.hide()
             self.text3.hide()
         return
