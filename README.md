@@ -52,7 +52,7 @@ You can also tell the app whether to draw the borders of countries on its maps, 
 
 Roughly 2,600 sets of languages and coordinates are from [the World Atlas of Language Structures dataset.](https://github.com/cldf-datasets/wals) This dataset is licensed under a Creative Commons 4.0 International license. It has been modified slightly for the purposes of this project; namely, the formatting of certain language names have been changed to bring them in line with Wiktionary's naming and formatting conventions. (For example, something like Frisian (West) in the WALS database would be listed as West Frisian in Wiktionary.)
 
-Everything else—mostly extinct and reconstructed languages—was gathered specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations. For instance, this project locates the reconstructed language Proto-Indo-European in the Pontic-Caspian steppe, as according to the steppe hypothesis.
+Everything else—mostly extinct and reconstructed languages—was gathered specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations. 
 
 ## Disclaimer
 
