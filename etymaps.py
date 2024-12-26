@@ -1,4 +1,4 @@
-# A little program to plot out maps of how words evolved over time, using
+# A program to plot out maps of how words evolved over time, using
 # data scraped from wiktionary. By @tesstris 12/24/24.
 
 # dependencies
