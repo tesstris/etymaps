@@ -110,6 +110,7 @@ def parseParagraph(language, etym_para):
             compare_loc = p.find("Compare")
             related_loc = p.find("Related to")
             related2_loc = p.find("related")
+            cognate2_loc = p.find("cognate")
 
             open_paren = p.find("(")
             close_paren = p.find(")")
@@ -119,7 +120,7 @@ def parseParagraph(language, etym_para):
             
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
                 break
-            if (related2_loc != -1 and related2_loc < i):
+            if (related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i):
                 break
             if p[0:i-1].find("From") != -1 or p[0:i-1].find("from") != -1 or p[0:i-1].find("of") != -1 or p[0:i-1].find("based on"):
                 if etyl.text not in origins:
@@ -175,6 +176,7 @@ def makeMap(origins, word, resolution, countries):
         # white etymology path arrows
         plt.arrow(x2, y2, x1-x2, y1-y2, color='white', linewidth=2, head_width=100000, head_length=100000, zorder = 10)
 
+    print(x1, y1, x2, y2)
     # some stuff to avoid messing up the original list in case we still need it
     ori_copy = origins.copy()
     ori_copy.reverse()
