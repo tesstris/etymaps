@@ -65,7 +65,7 @@ def getPage(language, word):
 # @parameters: the body of a wiktionary article, returned by getPage
 # @return: [desc, origins] where desc is the string describing the etymology and
 # origins is a list of languages
-def parseParagraph(language, etym_para):
+def parseParagraph(language, etym_para, todo, data_dict):
     ety_searching = True
     lang = etym_para.findAll("div", attrs={"class":"mw-heading mw-heading2"})
     ety_index = None
@@ -88,7 +88,7 @@ def parseParagraph(language, etym_para):
             if h.text.find("Etymology") != -1:
                 ety_index = h
                 if h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text.replace("[edit]", "") != lang_text:
-                    print(h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text)
+                    #print(h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text)
                     return None
                 else:
                     break
@@ -122,23 +122,44 @@ def parseParagraph(language, etym_para):
             related2_loc = p.find("related")
             cognate2_loc = p.find("cognate")
 
-            open_paren = p.find("(")
-            close_paren = p.find(")")
 
             if inParenthetical(p, etyl.text):
-                continue
+                continue # if the language is between parentheses, we probably don't care about it
             
+            # if it's not in parentheses and we've moved on to cognates, we're probably done with etymology
+            # sorry this line is so long. too lazy to fix
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
                 break
             if (related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i):
                 break
-            if p[0:i-1].find("From") != -1 or p[0:i-1].find("from") != -1 or p[0:i-1].find("of") != -1 or p[0:i-1].find("based on"):
+
+            # etymology keywords: from, of, based on
+            big_from = p[0:i-1].find("From")
+            little_from = p[0:i-1].find("from")
+            based_on = p[0:i-1].find("based on")
+            of = p[0:i-1].find("of")
+            if (big_from != -1 and big_from < i) or (little_from != -1 and little_from < i) or (of != -1 and of < i):
                 if etyl.text not in origins:
                     origins.append(etyl.text)
+                
             prev = i
             p = p[prev+len(etyl.text):-1]
+
+        # etymology is (almost?) always contained within 1 paragraph, so once you find something, stop
         if origins != [lang]:
             break
+
+    for o in origins:
+        # make sure each language is in our dataset
+        if o not in data_dict:
+            print(o)
+            if o in todo:
+                origins.remove(o)
+                desc += "\nSorry, " + o + " isn't in our dataset yet."
+            else:
+                
+                origins.remove(o)
+                continue
 
     print(origins)
     return [desc, origins]
@@ -169,11 +190,17 @@ def makeMap(origins, word, resolution, countries):
 
     for i in range(len(origins)-1):
         # make sure each language is in our dataset
-        if origins[i] not in data_dict:
-            return origins[i]
-        if origins[i+1] not in data_dict:
-            # if not, return the Problem Language and exit the function
-            return origins[i+1]
+        # if origins[i] not in data_dict:
+        #     if origins[i] in todo:
+        #         return origins[i]
+        #     else:
+        #         continue
+        # if origins[i+1] not in data_dict:
+        #     # if not, return the Problem Language and exit the function
+        #     if origins[i] in todo:
+        #         return origins[i+1]
+        #     else:
+        #         continue
 
         # otherwise, use the basemap library to convert the coordinates
         # they get imported as strings so have to convert to floats first
@@ -186,7 +213,7 @@ def makeMap(origins, word, resolution, countries):
         # white etymology path arrows
         plt.arrow(x2, y2, x1-x2, y1-y2, color='white', linewidth=2, head_width=100000, head_length=100000, zorder = 10)
 
-    print(x1, y1, x2, y2)
+    # print(x1, y1, x2, y2)
     # some stuff to avoid messing up the original list in case we still need it
     ori_copy = origins.copy()
     ori_copy.reverse()
@@ -391,7 +418,7 @@ class MainWindow(QWidget):
         if para == None:
             self.desc.setText("Did not find a wiktionary page for this word.")
             return
-        self.origins = parseParagraph(self.language, para)
+        self.origins = parseParagraph(self.language, para, todo_dict, data_dict)
         if self.origins == None:
             self.desc.setText("Did not find an etymology section for this word. Try an alternate form?")
             return
@@ -448,6 +475,7 @@ if __name__ == "__main__":
     print("Loading language coordinates...")
     csv_file_path = 'language_coords.csv'
     data_dict = getCSV(csv_file_path)
+    todo_dict = getCSV("diff.csv")
 
     print("Launching app...")
     # make the application
