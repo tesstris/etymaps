@@ -12,11 +12,11 @@ Etymaps is a python program that scrapes [Wiktionary](https://www.wiktionary.org
 
 It looks like this.
 
-It doesn't work on every word; if the etymology is unclear, or has multiple paths, or has an oddly-worded Wiktionary page, there may be some errors in parsing it. 
+This project is really just for fun, and not intended as or to be used as legitimate academic research. Since the coordinates are often the capital of the country that a language is spoken in, or the vague middle of the historical area where it was spoken, paths are by no means exact. (It would be more accurate to map the locations of documents where each word was attested, but that data is much less widely available.) Also, not every word on Wiktionary has a clear, mappable etymology.
 
-## Usage
+However, many of them do!
 
-### Installation
+## Installation
 
 With python installed, run:
 
@@ -26,7 +26,7 @@ Then:
 
 ``` python etymaps.py ```
 
-### Word search
+## Word search
 
 In order to create an etymology map, enter a word into the "word" tab and hit "go." Etymaps is designed for words with clear, single-path, well-attested etymologies. For compound words, please search for each part of the compound individually. Some words with unclear etymologies (or oddly-worded Wiktionary entries) may not be mappable.
 
@@ -36,7 +36,7 @@ You can also trace the etymology of suffixes, like the "ish" in "English," by pr
 
 If the program successfully parsed a mappable etymology, a "map" button will appear at the bottom of the window. Click it to create a map.
 
-### Specifying a language
+## Specifying a language
 
 Many Wiktionary pages only have one language on them, but sometimes a single word happens to exist with the same spelling in multiple languages. By default, Etymaps will select the first language on the page. 
 
@@ -44,7 +44,7 @@ Wiktionary organizes them alphabetically. For example, if you search зима, E
 
 When you return to the etymology tab, there should be an entry box for the language as well. Enter your target language and search as usual, and if the language exists on the page for that word and in the Etymaps dataset, it should be mappable.
 
-### Miscellaneous other settings
+## Miscellaneous other settings
 
 You can also tell the app whether to draw the borders of countries on its maps, and what resolution to plot the coastlines and borders in. Low resolution is recommended; higher resolutions may take a while to plot and make the maps lag.
 
