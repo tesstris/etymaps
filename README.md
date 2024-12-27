@@ -60,7 +60,7 @@ Roughly 2,600 sets of languages and coordinates are from [the World Atlas of Lan
 
 > [https://doi.org/10.5281/zenodo.13950591](https://doi.org/10.5281/zenodo.13950591)
 
-Coordinates for everything else—mostly extinct and reconstructed languages—were chosen specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations.
+Coordinates for everything else—at the time of editing this README, around 400 mostly extinct and reconstructed languages—were chosen specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations.
 
 ### CSV files in this repo
 
