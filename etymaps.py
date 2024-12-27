@@ -123,14 +123,14 @@ def parseParagraph(language, etym_para, todo, data_dict):
             cognate2_loc = p.find("cognate")
 
 
-            if inParenthetical(p, etyl.text):
-                continue # if the language is between parentheses, we probably don't care about it
+
             
             # if it's not in parentheses and we've moved on to cognates, we're probably done with etymology
             # sorry this line is so long. too lazy to fix
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
+                print("period break - cognate 1")
                 break
-            if (related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i):
+            if (period_loc != -1 and period_loc < i) and ((related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i)):
                 break
 
             # etymology keywords: from, of, based on
@@ -138,9 +138,18 @@ def parseParagraph(language, etym_para, todo, data_dict):
             little_from = p[0:i-1].find("from")
             based_on = p[0:i-1].find("based on")
             of = p[0:i-1].find("of")
+
+            if inParenthetical(p, etyl.text):
+                print(etyl.text)
+                p = p[p.find(")"):-1]
+                continue # if the language is between parentheses, we probably don't care about it
+
             if (big_from != -1 and big_from < i) or (little_from != -1 and little_from < i) or (of != -1 and of < i):
                 if etyl.text not in origins:
-                    origins.append(etyl.text)
+                    if not inParenthetical(p, "from"):
+                        print(p)
+                        print(etyl.text, "\n")
+                        origins.append(etyl.text)
                 
             prev = i
             p = p[prev+len(etyl.text):-1]
@@ -149,6 +158,7 @@ def parseParagraph(language, etym_para, todo, data_dict):
         if origins != [lang]:
             break
 
+    print(origins)
     origins_copy = origins.copy()
     for o in origins_copy:
         # make sure each language is in our dataset
