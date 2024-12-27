@@ -26,6 +26,8 @@ Then:
 
 ``` python etymaps.py ```
 
+It may take a while to run the first time you open it.
+
 ## Word search
 
 In order to create an etymology map, enter a word into the "word" tab and hit "go." Etymaps is designed for words with clear, single-path, well-attested etymologies. For compound words, please search for each part of the compound individually. Some words with unclear etymologies (or oddly-worded Wiktionary entries) may not be mappable.
