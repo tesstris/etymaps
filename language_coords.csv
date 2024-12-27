@@ -2748,7 +2748,7 @@ Ngbaka Ma'bo,3.56,18.36
 Ndebele (South Africa),-25.33333333,29
 Newari,27.66666667,85.5
 Ngbaka,3.5,20
-Nahuatl,20,99
+Nahuatl,20,-99
 Japanese Sign Language,36,139
 Nyah Kur,15.66666667,101.6666667
 Nambikuára,-14,-59.5
@@ -2867,7 +2867,8 @@ Classical Gaelic,53.5,-8.5
 Classical K'iche',15.5,-91.41666667
 Classical Latin,41,13
 Classical Mongolian,49.5,117.5
-Classical Nahuatl,20.5,99.5
+Proto-Nahuan,20.5,-99.5
+Classical Nahuatl,20.5,-99.5
 Classical Persian,32.5,54.5
 Classical Tagalog,15,121
 Coptic,31.2,31.2

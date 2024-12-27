@@ -497,6 +497,7 @@ class MainWindow(QWidget):
 
 if __name__ == "__main__":
     # load the language dataset
+    plt.rcParams['font.family'] = "Arial Unicode MS"
     print("Loading language coordinates...")
     csv_file_path = 'language_coords.csv'
     data_dict = getCSV(csv_file_path)
