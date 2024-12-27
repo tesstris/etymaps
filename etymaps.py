@@ -149,19 +149,18 @@ def parseParagraph(language, etym_para, todo, data_dict):
         if origins != [lang]:
             break
 
-    for o in origins:
+    origins_copy = origins.copy()
+    for o in origins_copy:
         # make sure each language is in our dataset
         if o not in data_dict:
-            print(o)
+            # print(o)
             if o in todo:
                 origins.remove(o)
                 desc += "\nSorry, " + o + " isn't in our dataset yet."
             else:
-                
                 origins.remove(o)
-                continue
+                # print(origins_copy)
 
-    print(origins)
     return [desc, origins]
 
 
