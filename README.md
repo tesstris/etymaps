@@ -12,15 +12,15 @@ Etymaps is a python program that scrapes [Wiktionary](https://www.wiktionary.org
 
 It looks like this.
 
-This project is a work in progress. Please be patient as we continue to iron out bugs and add languages to the dataset.
+It doesn't work on every word; if the etymology is unclear, or has multiple paths, or has an oddly-worded Wiktionary page, there may be some errors in parsing it. 
 
 ## Usage
 
 ### Installation
 
-With pip and python installed, run:
+With python installed, run:
 
-``` pip install requirements.txt ```
+``` pip install -r requirements.txt ```
 
 Then:
 
@@ -30,9 +30,9 @@ Then:
 
 In order to create an etymology map, enter a word into the "word" tab and hit "go." Etymaps is designed for words with clear, single-path, well-attested etymologies. For compound words, please search for each part of the compound individually. Some words with unclear etymologies (or oddly-worded Wiktionary entries) may not be mappable.
 
-The search function is case sensitive. Proper nouns ought to be capitalized. Words ought to be input using their original writing systems; that is, if you are searching a Korean word, it ought to be in Hangul, and if it's a Russian word, please use Cyrillic. When using Japanese, please use kanji rather than katakana or hiragana, if the kanji exists.
+The search function is case sensitive. Proper nouns ought to be capitalized. Words ought to be input using their original writing systems; that is, if you are searching a Korean word, it ought to be in Hangul, and if it's a Russian word, please use Cyrillic. When using Japanese, please use kanji rather than katakana or hiragana wherever possible.
 
-You can also trace the etymology of suffixes, like the "ish" in "English," by prepending a hyphen. (In the example, search "-ish".) Prefixes, given names, surnames, and names of cities usually also work, if there is a clear enough etymology.
+You can also trace the etymology of suffixes, like the "ish" in "English," by prepending a hyphen. (For example, search "-ish".) Prefixes, given names, surnames, and names of cities usually also work, if there is a clear enough etymology.
 
 If the program successfully parsed a mappable etymology, a "map" button will appear at the bottom of the window. Click it to create a map.
 
@@ -48,6 +48,8 @@ When you return to the etymology tab, there should be an entry box for the langu
 
 You can also tell the app whether to draw the borders of countries on its maps, and what resolution to plot the coastlines and borders in. Low resolution is recommended; higher resolutions may take a while to plot and make the maps lag.
 
+Since the maps are from a matplotlib package, you can zoom in and move them around using the toolbar at the top of each image.
+
 ## The dataset
 
 Roughly 2,600 sets of languages and coordinates are from [the World Atlas of Language Structures dataset.](https://github.com/cldf-datasets/wals) This dataset is licensed under a Creative Commons 4.0 International license. It has been modified slightly for the purposes of this project; namely, the formatting of certain language names have been changed to bring them in line with Wiktionary's naming and formatting conventions. (For example, something like Frisian (West) in the WALS database would be listed as West Frisian in Wiktionary.)
@@ -56,9 +58,16 @@ Roughly 2,600 sets of languages and coordinates are from [the World Atlas of Lan
 
 > Dryer, Matthew S. & Haspelmath, Martin (eds.) 2013. The World Atlas of Language Structures Online. Leipzig: Max Planck Institute for Evolutionary Anthropology. (Available online at [https://wals.info/](https://wals.info/))
 
-[https://doi.org/10.5281/zenodo.13950591](https://doi.org/10.5281/zenodo.13950591)
+> [https://doi.org/10.5281/zenodo.13950591](https://doi.org/10.5281/zenodo.13950591)
 
-Everything else—mostly extinct and reconstructed languages—was gathered specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations. 
+Coordinates for everything else—mostly extinct and reconstructed languages—were chosen specifically for this project. For ancient and reconstructed languages, attempts were made to choose coordinates according to the most popular theory regarding their locations.
+
+### CSV files in this repo
+
+There are two.
+
+* language_coords.csv is the main dataset.
+* diff.csv is the set of languages on Wiktionary but not in the current dataset, as generated using a file from [here.](https://en.wiktionary.org/wiki/Wiktionary:List_of_languages,_csv_format) It's mainly used to distinguish between language families and languages that aren't in the dataset yet.
 
 ## Disclaimer
 
@@ -69,14 +78,4 @@ The coordinates for extinct and reconstructed languages were chosen by hand, acc
 
 ## Acknowledgements
 
-This project would not be possible without the contributions of the authors of the World Atlas of Language Structures, as well as the creators of Wiktionary and all of its many contributors. Their excellent work and admirable scholarship deserves infinite appreciation.
-
-## To do
-
-Features to be added:
-
-* Support for words with multiple etymologies
-* Ability to map languages, potentially according to category (living/extinct/reconstructed)
-* Coordinates for language families, in case Wiktionary isn't sure precisely which language is the provenance of a word
-* More extinct and reconstructed languages
-* Accessibility features (ability to adjust font size and map colors)
+This project would not be possible without the contributions of the authors of the World Atlas of Language Structures, as well as the creators of Wiktionary and all of its many contributors. Their efforts are truly appreciated.
