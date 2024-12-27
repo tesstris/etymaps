@@ -122,7 +122,7 @@ def parseParagraph(language, etym_para, todo, data_dict):
             # location of the language
             i = p.find(etyl.text)
 
-            #print(p, etyl.text)
+            # print(p, etyl.text)
 
             # locations of useful keywords
             period_loc = p.find(".")
@@ -131,6 +131,7 @@ def parseParagraph(language, etym_para, todo, data_dict):
             related_loc = p.find("Related to")
             related2_loc = p.find("related")
             cognate2_loc = p.find("cognate")
+            compare2_loc = p.find("compare")
 
             # if the language is between parentheses, it's probably not in the direct etymological path
             if inParenthetical(p, etyl.text):
@@ -140,9 +141,10 @@ def parseParagraph(language, etym_para, todo, data_dict):
             # if it's not in parentheses and we've moved on to cognates, we're probably done with etymology
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
                 break
-            if ((related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i)):
+            if (period_loc != -1 and period_loc < i) and((related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i) or (compare2_loc != -1 and compare2_loc < i)):
                 break
             if  (p.find("nfluenced by") != -1 and p.find("nfluenced by") < i):
+                print(etyl.text)
                 prev = i
                 p = p[prev+len(etyl.text):-1]
                 continue
