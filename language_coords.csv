@@ -2826,9 +2826,9 @@ Anglo-Norman,49.61,-1.75
 Aquitanian,43.94,0.16
 Arcadocypriot Greek,37.71,22.17
 Prakrit,24,29
-Indo-Aryan,24.6,29.6
-Middle Indo-Aryan,24.2,29.2
-Ashokan Prakrit,24.4,29.4
+Indo-Aryan,27,80
+Middle Indo-Aryan,27,80
+Ashokan Prakrit,27,80
 Assyrian,37.45,43.82
 Attic Greek,38.1,23.7
 Doric Greek,36.88,22.81
@@ -2849,7 +2849,6 @@ Proto-Indo-European,48,43
 Proto-West Germanic,52,10
 Old High German,48.95,10.58
 Proto-Algonquian,50,-90
-Proto-Germanic,52,13
 Proto-Indo-European,48,43
 Proto-West Germanic,52,10
 Babylonian,32.44,44.77
@@ -3052,3 +3051,34 @@ Proto-Balto-Slavic,52,31
 Proto-Sino-Tibetan,37,108
 Proto-Tocharian,40,82
 Sanskrit,25,72
+Proto-Atlantic-Congo,-6,25
+Proto-Austroasiatic,28,105
+Proto-Austronesian,24,121
+Proto-Celtic,48,9
+Proto-Central-Eastern Malayo-Polynesian,20,120
+Common Turkic,45.4,91.1
+Proto-Dravidian,17,72.6
+Proto-Eastern Malayo-Polynesian,20,120
+Proto-Eastern Polynesian,20,120
+Proto-Finnic,64,27
+Proto-Hellenic,39,22
+Proto-Inuit,62.5,80
+Proto-Iranian,42,68
+Proto-Iroquoian,44,-78
+Proto-Italic,41,13
+Proto-Japonic,37,140
+Proto-Malayo-Polynesian,20,120
+North Proto-Germanic,53,13
+Proto-Oceanic,24,121
+Proto-Philippine,20,120
+Proto-Polynesian,20,120
+Proto-Quechuan,-9,-74
+Proto-Samic,63,26
+Proto-Apachean,33,-110
+Proto-Basque,43,-3
+Proto-Chamic,25,121.5
+Proto-Hmong,27,105
+Proto-Hmong-Mien,27,105
+Proto-Koreanic,37.5,128
+Proto-Kurdish,36,44
+Proto-Mansi,62,62
