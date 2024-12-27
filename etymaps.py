@@ -121,7 +121,9 @@ def parseParagraph(language, etym_para, todo, data_dict):
         for etyl in etyls:
             # location of the language
             i = p.find(etyl.text)
-            # print(p, etyl.text)
+
+            #print(p, etyl.text)
+            
             # locations of useful keywords
             period_loc = p.find(".")
             cognate_loc = p.find("Cognate")
@@ -132,7 +134,7 @@ def parseParagraph(language, etym_para, todo, data_dict):
 
             # if the language is between parentheses, it's probably not in the direct etymological path
             if inParenthetical(p, etyl.text):
-                p = p[p.find(")"):-1]
+                p = p[p.find(")")+1:-1]
                 continue 
             
             # if it's not in parentheses and we've moved on to cognates, we're probably done with etymology
@@ -169,8 +171,8 @@ def parseParagraph(language, etym_para, todo, data_dict):
                             # sometimes all the etymology it knows is from a language family, though, so not a bad idea to add them someday
                             # in the meantime, continue with no string slicing in order to grab the first example?
                             continue
-                    if not inParenthetical(p, "from"): 
-                        origins.append(etyl.text) 
+
+                    origins.append(etyl.text) 
             
             # move on to search the rest of the text
             prev = i
