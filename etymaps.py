@@ -27,9 +27,11 @@ from PyQt6.QtWidgets import (
 # csv handling
 import csv
 
-# Only needed for access to command line arguments
-import sys
 
+# function inParenthetical
+# @desc: given a string and a word, returns whether or not the word is inside a set of parentheses, nested or otherwise
+# @params: passage, a string with a word in it, and word, the word also as a string
+# @return: True if the word is inside a set of parentheses, False otherwise.
 def inParenthetical(passage, word):
     word_index = passage.find(word)
     trimmed = passage[0:word_index]
@@ -45,9 +47,7 @@ def inParenthetical(passage, word):
 # @purpose: visits the wiktionary page and parses it for paragraphs
 # @parameters: language, word to search for, as strings - language should be in English,
 # but word should be in the target language
-# @returns: a list containing each paragraph parsed from the wiktionary page
-# often this is just the etymology paragraph, but if the wiktionary page contains
-# links to quotes or something, it may have grabbed those as well
+# @returns: the body of the wiktionary article, or None if the article was not found
 def getPage(language, word):
     word = word.replace(" ", "_")
 
@@ -66,13 +66,13 @@ def getPage(language, word):
 # @return: [desc, origins] where desc is the string describing the etymology and
 # origins is a list of languages
 def parseParagraph(language, etym_para, todo, data_dict):
-    ety_searching = True
+
+    # find all language headers
     lang = etym_para.findAll("div", attrs={"class":"mw-heading mw-heading2"})
     ety_index = None
-
-    
     lang_place = None
 
+    # if we're looking for a specific language, search for that language
     if language != None:
         for l in lang:
             lang_text = l.text.replace("[edit]", "")
@@ -81,7 +81,8 @@ def parseParagraph(language, etym_para, todo, data_dict):
                 lang = lang_text
                 origins = [lang_text]
                 break
-
+    
+    # if we found it, start there
     if lang_place != None:
         headers = lang_place.find_all_next("h3")
         for h in headers:
@@ -92,21 +93,25 @@ def parseParagraph(language, etym_para, todo, data_dict):
                     return None
                 else:
                     break
+    # otherwise, or if no languae specified, check the whole page
     else:
         headers = etym_para.findAll("h3")
         for h in headers:
+            # if an etymology is found, go back and grab the language
             if h.text.find("Etymology") != -1:
                 ety_index = h
                 lang = h.find_previous("div", attrs={"class":"mw-heading mw-heading2"}).text.replace("[edit]", "")
-                #print(lang_text)
                 origins = [lang]
                 break
     
-
+    # if we didn't find an etymology
     if ety_index == None:
         return None           
     
+    # add the language to the description
     desc = lang + ". "
+
+    # get etymology paragraphs and parse
     etym_para = ety_index.find_all_next("p")
     for p in etym_para:
         etyls = p.findAll("span", attrs={"class":"etyl"})
@@ -114,7 +119,10 @@ def parseParagraph(language, etym_para, todo, data_dict):
         desc += p
         prev = 0
         for etyl in etyls:
+            # location of the language
             i = p.find(etyl.text)
+            # print(p, etyl.text)
+            # locations of useful keywords
             period_loc = p.find(".")
             cognate_loc = p.find("Cognate")
             compare_loc = p.find("Compare")
@@ -122,16 +130,20 @@ def parseParagraph(language, etym_para, todo, data_dict):
             related2_loc = p.find("related")
             cognate2_loc = p.find("cognate")
 
-
-
+            # if the language is between parentheses, it's probably not in the direct etymological path
+            if inParenthetical(p, etyl.text):
+                p = p[p.find(")"):-1]
+                continue 
             
             # if it's not in parentheses and we've moved on to cognates, we're probably done with etymology
-            # sorry this line is so long. too lazy to fix
             if (period_loc != -1 and period_loc < i) and ((cognate_loc != -1 and cognate_loc < i) or (compare_loc != -1 and compare_loc < i) or (related_loc != -1 and related_loc < i)):
-                print("period break - cognate 1")
                 break
             if (period_loc != -1 and period_loc < i) and ((related2_loc != -1 and related2_loc < i) or (cognate2_loc != -1 and cognate2_loc < i)):
                 break
+            if  (p.find("nfluenced by") != -1 and p.find("nfluenced by") < i):
+                prev = i
+                p = p[prev+len(etyl.text):-1]
+                continue
 
             # etymology keywords: from, of, based on
             big_from = p[0:i-1].find("From")
@@ -139,18 +151,28 @@ def parseParagraph(language, etym_para, todo, data_dict):
             based_on = p[0:i-1].find("based on")
             of = p[0:i-1].find("of")
 
-            if inParenthetical(p, etyl.text):
-                print(etyl.text)
-                p = p[p.find(")"):-1]
-                continue # if the language is between parentheses, we probably don't care about it
-
-            if (big_from != -1 and big_from < i) or (little_from != -1 and little_from < i) or (of != -1 and of < i):
-                if etyl.text not in origins:
-                    if not inParenthetical(p, "from"):
-                        print(p)
-                        print(etyl.text, "\n")
-                        origins.append(etyl.text)
-                
+            # check for keywords before the current language
+            # if we don't have it already
+            # and the from part isn't inside a set of parentheses (it happened once)
+            # then append
+            if (big_from != -1 and big_from < i) or (little_from != -1 and little_from < i) or (of != -1 and of < i) or (based_on != -1 and based_on < i):
+                if etyl.text not in origins: 
+                    if etyl.text not in data_dict:
+                        # if the language is in the Big To-Do List, add a little note saying so
+                        if etyl.text in todo:
+                            desc += "\nSorry, " + etyl.text + " isn't in our dataset yet."
+                            prev = i
+                            p = p[prev+len(etyl.text):-1]
+                            continue 
+                        else:
+                            # this prevents the program from accidentally taking language families as languages
+                            # sometimes all the etymology it knows is from a language family, though, so not a bad idea to add them someday
+                            # in the meantime, continue with no string slicing in order to grab the first example?
+                            continue
+                    if not inParenthetical(p, "from"): 
+                        origins.append(etyl.text) 
+            
+            # move on to search the rest of the text
             prev = i
             p = p[prev+len(etyl.text):-1]
 
@@ -159,17 +181,20 @@ def parseParagraph(language, etym_para, todo, data_dict):
             break
 
     print(origins)
+
+    # cleaning up the origins list so that we know everything in it is in the dataset
     origins_copy = origins.copy()
     for o in origins_copy:
         # make sure each language is in our dataset
         if o not in data_dict:
-            # print(o)
+            # if the language is in the Big To-Do List, add a little note saying so
             if o in todo:
                 origins.remove(o)
                 desc += "\nSorry, " + o + " isn't in our dataset yet."
             else:
+                # this prevents the program from accidentally taking language families as languages
+                # sometimes all the etymology it knows is from a language family, though, so not a bad idea to add them someday
                 origins.remove(o)
-                # print(origins_copy)
 
     return [desc, origins]
 
@@ -198,20 +223,7 @@ def makeMap(origins, word, resolution, countries):
     x1, x2, y1, y2 = 0, 0, 0, 0
 
     for i in range(len(origins)-1):
-        # make sure each language is in our dataset
-        # if origins[i] not in data_dict:
-        #     if origins[i] in todo:
-        #         return origins[i]
-        #     else:
-        #         continue
-        # if origins[i+1] not in data_dict:
-        #     # if not, return the Problem Language and exit the function
-        #     if origins[i] in todo:
-        #         return origins[i+1]
-        #     else:
-        #         continue
-
-        # otherwise, use the basemap library to convert the coordinates
+        # use the basemap library to convert the coordinates
         # they get imported as strings so have to convert to floats first
         x1, y1 = m(float(data_dict[origins[i]][1]), float(data_dict[origins[i]][0]))
         x2, y2 = m(float(data_dict[origins[i+1]][1]), float(data_dict[origins[i+1]][0]))
@@ -257,11 +269,10 @@ def getCSV(csv_file_path):
 
 # function entireMap
 # @description: plots every single language in the dataset onto a map. functionally unusable for map purposes,
-# because there's so many of them and it's so crowded, and it's also very slow
+# because there's so many of them and it's so crowded, and it's also very slow. used nowhere in the actual app
 # @param: language coordinates dictionary
 # @return: nothing
 def entireMap(CoordsDict):
-     # this is where we do the figures!!
     plt.figure(figsize = (10,10))
     # using mercator projection for hashtag name brand recognition
     m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
@@ -281,7 +292,7 @@ def entireMap(CoordsDict):
     return
     
 
-# Main app gui class using PyQt6.
+# main app gui class using PyQt6.
 class MainWindow(QWidget):
     def __init__(self):
         # init the parent class
@@ -312,31 +323,36 @@ class MainWindow(QWidget):
         self.desc.setWordWrap(True)
         self.desc.setMaximumSize(800, 500)
         
-        
+        # text that says word
         text_widget = QLabel("word")
         font = text_widget.font()
         font.setPointSize(20)
         text_widget.setFont(font)
 
+        # text that says etymology
         ety_text_widget = QLabel("etymology")
         font = ety_text_widget.font()
         font.setPointSize(20)
         ety_text_widget.setFont(font)
 
+        # word input and go button
         self.input_widget = QLineEdit()
         
         button_widget = QPushButton("go")
         button_widget.setCheckable(True)
         button_widget.clicked.connect(self.on_click_go)
 
+        # language input
         self.lang_input_widget = QLineEdit()
         text2 = QLabel("word")
         self.text3 = QLabel("language")
 
+        # map button
         self.map_button = QPushButton("Map")
         self.map_button.setCheckable(True)
         self.map_button.clicked.connect(self.on_click_map)
 
+        # default window size (it's resizable)
         self.setGeometry(100, 100, 800, 200)
 
         # add big "word" widget
@@ -368,19 +384,17 @@ class MainWindow(QWidget):
         self.tab_widget.addTab(self.ety_tab, "etymology")
 
         # settings tab
-        general_text = QLabel("general settings")
-        font = general_text.font()
-        font.setPointSize(20)
-        general_text.setFont(font)
+        self.settings_layout = QVBoxLayout()
 
+        # specify language checkbox - unchecked by default
         specify_text = QLabel("Specify a language")
         specify_layout = QHBoxLayout()
-        
-        self.settings_layout = QVBoxLayout()
+
         self.language_checkbox = QCheckBox()
         self.language_checkbox.setCheckState(Qt.CheckState.Unchecked)
         self.language_checkbox.stateChanged.connect(self.lang_checkbox_click)
 
+        # map resolution dropdown menu
         self.res_dropdown = QComboBox()
         self.res_dropdown.addItem("low (recommended)")
         self.res_dropdown.addItem("medium")
@@ -389,6 +403,7 @@ class MainWindow(QWidget):
         res_layout = QHBoxLayout()
         self.res_dropdown.currentIndexChanged.connect(self.change_res_click)
 
+        # draw country borders checkbox - unchecked by default
         self.countries_checkbox = QCheckBox()
         countries_text = QLabel("Draw national borders")
         self.countries_checkbox.setCheckState(Qt.CheckState.Unchecked)
@@ -397,7 +412,7 @@ class MainWindow(QWidget):
 
 
 
-        # self.settings_layout.addWidget(general_text)
+        # adding everything to the settings tab
         specify_layout.addWidget(specify_text)
         specify_layout.addWidget(self.language_checkbox)
         self.settings_layout.addLayout(specify_layout)
@@ -439,9 +454,6 @@ class MainWindow(QWidget):
         else:
             self.setGeometry(100, 100, 800, 400)
             self.map_button.show()
-            # map = makeMap(self.origins[1], self.word)
-            # if map != "Success":
-            #     self.desc.setText(self.origins[0] + "Sorry, we don't have coordinates for " + map + ".")
 
     # method for when the "Map" button is clicked
     def on_click_map(self):
@@ -469,8 +481,8 @@ class MainWindow(QWidget):
         else:
             self.map_res = "i"
 
+    # method for deciding whether or not to show border lines
     def countries_checkbox_click(self, s):
-        #blah blah
         if s == 2:
             self.countries = True
         else:
@@ -488,7 +500,7 @@ if __name__ == "__main__":
 
     print("Launching app...")
     # make the application
-    app = QApplication(sys.argv)
+    app = QApplication([])
 
     # window instance
     window = MainWindow()
